@@ -24,6 +24,7 @@ import '../../data/request_helper.dart';
 import 'common_widget/custom_appbar.dart';
 import 'menu_block_design.dart';
 import 'milk_collection/milk_collection_activity.dart';
+import 'milk_route_collection/milk_route_collection_activity.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -476,8 +477,199 @@ class _HomePageState extends State<HomePage> {
                           ):Container()
                         ],
                       ),
+                  SizedBox(height: 10,),
+
+                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}"))||
+                          (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("center_route_collection")}"))
+                          ?Stack(
+                    children: [
+                      Container(
+                        height: 35,
+
+                        decoration: BoxDecoration(
+                          borderRadius:  BorderRadius.all(Radius.circular(15)),
+                          gradient: LinearGradient(
+                            colors: [      Color(0xFF006400),
+                              Color(0xFF008000),],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left:50,
+                        right: 50,
+                        top: 5,
+                        bottom: 5,
+                        child:  Text("${ApplicationLocalizations.of(context).translate("route_collection")}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(color: Colors.white),),
+                      )
+                    ],
+                  ):Container(),
 
 
+                  SizedBox(height: 10,),
+                  Row(
+                    children: [
+
+
+                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("center_route_collection")}"))?  Expanded(
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
+                              from_date:from_date,
+                              to_date:to_date,
+                              route_type:"C",
+                              // setVal: "",
+                              title: ApplicationLocalizations.of(context).translate("center_route_collection"),)));
+                          },
+                          child: Container(
+                            width: (SizeConfig.screenWidth*0.9)/2,
+
+                            decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                border: Border.all(color: Colors.blue)
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  // width: (SizeConfig.screenWidth*0.9)/2,
+                                    height: 60,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                        border: Border.all(color: Colors.blue)
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            FontAwesomeIcons.droplet,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+
+                                        Container(
+                                            width: (SizeConfig.screenWidth*0.7)/2,
+                                            padding: EdgeInsets.all(3),
+
+                                            child: Text("${ApplicationLocalizations.of(context).translate("center_route_collection")}",style:fordashboard.copyWith(color:Colors.white))),
+                                      ],
+                                    )
+                                ),
+
+                                Container(
+                                  // width: (SizeConfig.screenWidth*0.9)/2,
+                                  margin: EdgeInsets.only(top: 10),
+
+                                  child: Column(
+                                    children: [
+
+                                      dashboardData==null ?Text("0.00",style: fordashboard,):
+                                      center_milkQuantity==null?Container():Text( "${ApplicationLocalizations.of(context).translate("qty")} :"
+                                          " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(center_milkQuantity!.replaceAll(",", "")))}",textAlign: TextAlign.center,style: fordashboard,),
+                                      Padding(
+                                        padding:  EdgeInsets.all(5.0),
+                                        child: Divider(height: 1,color: Colors.grey,),
+                                      ),
+                                      dashboardData==null ?Text("0.00",style: fordashboard,):
+                                      center_amount==null?Container():Text("${ApplicationLocalizations.of(context).translate("amt")} :"
+                                          " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(center_amount!.replaceAll(",", "")))}",textAlign: TextAlign.center,style: fordashboard,),
+                                      SizedBox(height: 2,),
+
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                      :Container(),
+
+                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}")) ?
+
+                      SizedBox(width: 10,)
+                      :Container(),
+
+                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}")) ?
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
+                              from_date:from_date,
+                              to_date:to_date,
+                              route_type: "F",
+                              // setVal: "",
+                              title: ApplicationLocalizations.of(context).translate("farmer_route_collection"),
+                            )));
+                          },
+                          child: Container(
+                            width: (SizeConfig.screenWidth*0.9)/2,
+
+                            decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                border: Border.all(color: Colors.green)
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  // width: (SizeConfig.screenWidth*0.9)/2,
+                                    height: 60,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                        border: Border.all(color: Colors.green)
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            FontAwesomeIcons.droplet,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Container(
+                                            width: (SizeConfig.screenWidth*0.7)/2,
+                                            padding: EdgeInsets.all(3),
+
+                                            child: Text("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}",overflow: TextOverflow.clip,style:fordashboard.copyWith(color:Colors.white))),
+                                      ],
+                                    )
+                                ),
+
+                                Container(
+                                  // width: (SizeConfig.screenWidth*0.9)/2,
+                                  margin: EdgeInsets.only(top: 10),
+                                  child: Column(
+                                    children: [
+
+                                      dashboardData==null ?Text("0.00",style: fordashboard,):
+                                      farmer_milkQuantity==null?Container():Text( "${ApplicationLocalizations.of(context).translate("qty")} :"
+                                          " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(farmer_milkQuantity!.replaceAll(",", "")))}",textAlign: TextAlign.center
+                                        ,style: fordashboard,),
+                                      Padding(
+                                        padding:  EdgeInsets.all(5.0),
+                                        child: Divider(height: 1,color: Colors.grey,),
+                                      ),
+                                      dashboardData==null ?Text("0.00",style: fordashboard,):
+                                      farmer_amount==null?Container():Text("${ApplicationLocalizations.of(context).translate("amt")} :"
+                                          " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(farmer_amount!.replaceAll(",", "")))}",style: fordashboard,textAlign: TextAlign.center,),
+                                      SizedBox(height: 2,),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ):Container()
+                        ])
                     ],
                   ),
                 ),
