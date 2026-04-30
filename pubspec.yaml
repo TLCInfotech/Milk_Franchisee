@@ -35,6 +35,26 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  flutter_staggered_animations: ^1.1.1
+  font_awesome_flutter: ^10.6.0
+  stylish_bottom_bar: ^1.1.0
+  intl: ^0.19.0
+  shared_preferences:
+  device_info_plus:
+  flutter_typeahead: ^4.0.0
+  internet_connection_checker: ^0.0.1+3
+  path_provider: ^2.1.2
+  permission_handler: ^10.0.0
+  fluttertoast: ^8.2.4
+  syncfusion_flutter_pdfviewer:
+  share_plus: ^10.0.2
+  file_picker:
+  qr_flutter: ^4.1.0
+  http:
+  flutter_localizations:
+    sdk: flutter
+
+
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +77,112 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+
+  assets:
+    - assets/translations/
+    - assets/images/
+  fonts:
+    - family: BarlowCondensed-Black
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-Black.ttf
+    - family: BarlowCondensed-Bold
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-Bold.ttf
+    - family: BarlowCondensed-BoldItalic
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-BoldItalic.ttf
+    - family: BarlowCondensed-ExtraBold
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-ExtraBold.ttf
+    - family: BarlowCondensed-ExtraBoldItalic
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-ExtraBoldItalic.ttf
+    - family: BarlowCondensed-ExtraLight
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-ExtraLight.ttf
+    - family: BarlowCondensed-ExtraLightItalic
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-ExtraLightItalic.ttf
+    - family: BarlowCondensed-Italic
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-Italic.ttf
+    - family: BarlowCondensed-Light
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-Light.ttf
+    - family: BarlowCondensed-LightItalic
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-LightItalic.ttf
+    - family: BarlowCondensed-Medium
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-Medium.ttf
+    - family: BarlowCondensed-MediumItalic
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-MediumItalic.ttf
+    - family: BarlowCondensed-Regular
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-Regular.ttf
+    - family: BarlowCondensed-SemiBold
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-SemiBold.ttf
+    - family: BarlowCondensed-SemiBoldItalic
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-SemiBoldItalic.ttf
+    - family: BarlowCondensed-Thin
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-Thin.ttf
+    - family: BarlowCondensed-ThinItalic
+      fonts:
+        - asset: assets/fonts/BarlowCondensed-ThinItalic.ttf
+
+    - family: OpenSans-Bold
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-Bold.ttf
+    - family: OpenSans-ExtraBold
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-ExtraBold.ttf
+    - family: OpenSans-Light
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-Light.ttf
+    - family: OpenSans-Medium
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-Medium.ttf
+    - family: OpenSans-Regular
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-Regular.ttf
+    - family: OpenSans-SemiBold
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-SemiBold.ttf
+    - family: OpenSans_Condensed-Bold
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_Condensed-Bold.ttf
+    - family: OpenSans_Condensed-Light
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_Condensed-Light.ttf
+    - family: OpenSans_Condensed-Medium
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_Condensed-Medium.ttf
+    - family: OpenSans_Condensed-Regular
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_Condensed-Regular.ttf
+    - family: OpenSans_Condensed-SemiBold
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_Condensed-SemiBold.ttf
+    - family: OpenSans_SemiCondensed-Bold
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_SemiCondensed-Bold.ttf
+    - family: OpenSans_SemiCondensed-ExtraBold
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_SemiCondensed-ExtraBold.ttf
+    - family: OpenSans_SemiCondensed-Light
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_SemiCondensed-Light.ttf
+    - family: OpenSans_SemiCondensed-Medium
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_SemiCondensed-Medium.ttf
+    - family: OpenSans_SemiCondensed-Regular
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans_SemiCondensed-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -1,0 +1,301 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import '../common_widget/common.dart';
+import '../core/localss/api_data_fetch_localization.dart';
+
+import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import '../../core/app_preferance.dart';
+import '../../core/colors.dart';
+import '../../core/common_style.dart';
+import '../core/size_config.dart';
+import '../data/commonRequest/get_toakn_request.dart';
+import '../data/request_helper.dart';
+
+class TestItem {
+  String label;
+  dynamic value;
+  TestItem({required this.label, this.value});
+
+  factory TestItem.fromJson(Map<String, dynamic> json) {
+    return TestItem(label: json['label'], value: json['value']);
+  }
+}
+
+class SearchableDropdownForStringArray extends StatefulWidget{
+  final title;
+  final ledgerName;
+  final Function(String?) callback;
+  final titleIndicator;
+  final apiUrl;
+  final franchisee;
+  final franchiseeName;
+  final readOnly;
+  final focuscontroller;
+  final txtkey;
+  final focusnext;
+  final mandatory;
+  SearchableDropdownForStringArray({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.readOnly,this.focuscontroller,this.txtkey,this.focusnext,this.mandatory});
+
+
+
+
+  @override
+  State<SearchableDropdownForStringArray> createState() => _SingleLineEditableTextFormFieldState();
+}
+
+class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForStringArray> with  SingleTickerProviderStateMixin {
+  bool isLoaderShow = false;
+  FocusNode searchFocus = FocusNode() ;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  final TextEditingController _controller = TextEditingController();
+
+  var selectedItem=null;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("Here");
+    setdata();
+    searchFocus.addListener(_onFocusChange);
+  }
+  bool _isListening = false;
+  String _text = "";
+  double _confidence = 1.0;
+
+
+
+  void _onFocusChange() {
+    if (!searchFocus.hasFocus) {
+      if(selectedItem==null){
+        FocusManager.instance.primaryFocus?.unfocus();
+        _controller.clear();
+        var snackBar=SnackBar(content: Text(ApplicationLocalizations.of(context).translate("no_item_ava")));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    searchFocus.removeListener(_onFocusChange);
+    searchFocus.dispose();
+    super.dispose();
+  }
+  setdata()async{
+    print("Franchasiee ${widget.franchisee}");
+    await callGetLedger();
+    if(widget.franchisee=="edit" && widget.franchiseeName!=null ){
+      print(":::::: ${widget.franchiseeName}\n ${widget.ledgerName}");
+      _controller.text=widget.franchiseeName;
+    }
+  }
+  List<dynamic> ledger_list = [];
+
+  var filteredStates = [];
+
+
+  callGetLedger() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String sessionToken = await AppPreferences.getSessionToken();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = baseurl + widget.apiUrl+"Company_ID=$companyId";
+      apiRequestHelper.callAPIsForGetAPI(context,apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            isLoaderShow=false;
+            if(data!=null) {
+              setState(() {
+                ledger_list = data;
+                filteredStates=ledger_list;
+              });
+              print("  LedgerLedger  $data ");
+            }
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+
+          },sessionExpire: (e) {
+
+        CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return
+
+      Padding(
+          // widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):
+        padding:  EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            widget.titleIndicator!=false? widget.mandatory==true?
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text:widget.title,style: item_heading_textStyle,),
+                  TextSpan(text:"*",style: item_heading_textStyle.copyWith(color: Colors.red),),
+                ],
+              ),
+            )
+                : Text(
+              widget.title,
+              style: item_heading_textStyle,
+            ):Container(),
+            Padding(
+              padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
+              child:  Container(
+                height: SizeConfig.screenHeight * .055,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color:CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: TypeAheadFormField(
+                  key: widget.txtkey,
+                  textFieldConfiguration: TextFieldConfiguration(
+                    style: item_heading_textStyle,
+                    onChanged: (v)async{
+                      if(v.isEmpty) {
+                        setState(() {
+                          selectedItem=null;
+                          print("knjbnbnjbnbn  $v");
+                        });
+                        await widget.callback(null);
+                      }
+                    },
+                    onSubmitted: (v){
+                      if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                        setState(() {
+                          _controller.clear();
+                        });
+                        widget.callback("");
+                        searchFocus.unfocus();
+                      }},
+                    onTapOutside: (event) {
+                    },
+                    onEditingComplete: () {
+                      print("onchangedddddd2222  ");
+                      if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                        setState(() {
+                          _controller.clear();
+                        });
+                        widget.callback("");
+                        searchFocus.unfocus();
+                      }
+                    },
+                    onTap: (){
+                      setState(() {
+                        callGetLedger();
+                      });
+                    },
+                    textInputAction: TextInputAction.none, // Change input action to "none"
+                    controller: _controller,
+                    focusNode: searchFocus,
+                    enabled: widget.readOnly==false?false:true,
+                    decoration: textfield_decoration.copyWith(
+                      // labelText: '${widget.title}',
+                      filled: true,
+                      fillColor: Colors.white,
+
+                      hintText: "${widget.title}",
+                      border: InputBorder.none,
+                      suffixIcon:widget.readOnly==false?Container(width: 1,): Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          (_controller.text == "")
+                              ? const Icon(Icons.search)
+                              : IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _controller.clear();
+                              });
+                              widget.callback("");
+                              searchFocus.requestFocus();
+                              _controller.text =
+                                  _controller.text; // Trigger a rebuild
+                            },
+                            icon: const Icon(Icons.clear),
+                          ),
+                        ],
+                      ),                          errorStyle: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16.0,
+                          height: 0
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                      ),
+                    ),
+                  ),
+
+                  suggestionsCallback: (pattern) {
+                    return _getSuggestions(pattern);
+                  },
+                  itemBuilder: (context, suggestion) {
+                    print("VALUED $suggestion");
+                    return ListTile(
+                      title: Text(suggestion),
+                    );
+                  },
+                  validator: (value) {
+                    print("kkjggkg   $value");
+                    if (value!.isEmpty) {
+                      return '';
+                    }
+
+                  },
+                  onSuggestionSelected: (suggestion) {
+                    setState(() {
+                      selectedItem = suggestion;
+                      _controller.text=suggestion;
+                    });
+                    widget.callback(suggestion);
+                  },
+                ),
+              ),
+
+            )
+          ],
+        ),
+      );
+  }
+  List _getSuggestions(String query) {
+    print("QUERY $query");
+    List matches = [];
+    matches.addAll(ledger_list);
+
+    matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
+    return matches;
+  }
+
+}

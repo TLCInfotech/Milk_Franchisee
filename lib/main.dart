@@ -1,100 +1,178 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:io';
 
-void main() {
-  runApp(const MyApp());
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:milk_fr/presentation/dashboard_activity.dart';
+import 'package:milk_fr/presentation/login/domain_link.dart';
+import 'package:milk_fr/presentation/login/login_screen.dart';
+
+import 'core/app_preferance.dart';
+import 'core/colors.dart';
+import 'core/localss/api_data_fetch_localization.dart';
+import 'core/size_config.dart';
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ApplicationLocalizations.loadFromLocal();
+
+//  cameras = await availableCameras();
+  runApp(MyApp());
+
+  // Rest of your code remains the same...
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Milk Franchisee',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return  MaterialApp(
+      title: 'Milk Collection',
+      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
+      // supportedLocales: const [
+      //   Locale( 'en' , '' ),
+      //   Locale( 'de' , '' ),
+      // ],
+      //
+      // localizationsDelegates: const [
+      //   ApplicationLocalizations.delegate,
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate,
+      // ],
+      //
+      // localeResolutionCallback: (locale, supportedLocales) {
+      //   for (var supportedLocaleLanguage in supportedLocales) {
+      //     if (supportedLocaleLanguage.languageCode == locale!.languageCode &&
+      //         supportedLocaleLanguage.countryCode == locale.countryCode) {
+      //       return supportedLocaleLanguage;
+      //     }
+      //   }
+      //   return supportedLocales.first;
+      // },
+
+      builder: (context, child) {
+        return MediaQuery(
+          child: child!,
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 0.78),
+        );
+      },
+      routes: <String, WidgetBuilder>{
+        '/loginActivity': (BuildContext context) =>    LoginScreen(),
+        '/domainLinkActivity': (BuildContext context) =>    DomainLinkActivity(),
+        '/dashboard': (BuildContext context) =>   HomePage(),
+      },
     );
   }
+
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-
-  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    startTimer();
+    getDeviceID();
   }
+
+  /*Function for get Device Id is IOS or Android */
+  getDeviceID()   {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      deviceInfo.iosInfo.then((iosInfo) {
+        AppPreferences.setDeviceId(iosInfo.name);
+      });
+    } else {
+      deviceInfo.androidInfo.then((androidInfo) {
+        AppPreferences.setDeviceId(androidInfo.manufacturer);
+        print("ttttttttttt  ${androidInfo.id}      ${androidInfo.product}");
+      });
+
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    SizeConfig().init(context);
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      backgroundColor: CommonColor.WHITE_COLOR,
+      body: getAddNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
     );
   }
+
+  /* Widget for Add Name Layout */
+  Widget getAddNameLayout(double parentHeight, double parentWidth){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(
+          child: Image(
+            height: parentWidth,
+            width: parentWidth * .6,
+            image: const AssetImage('assets/images/tlc.jpg'),
+            //  fit: BoxFit.cover,
+          ),
+        ),
+      ],
+    );
+  }
+
+
+  void navigateLogin() {
+    Navigator.of(context).pushReplacementNamed('/loginActivity');
+  }
+
+
+  void navigateDashboard() {
+    Navigator.of(context).pushReplacementNamed('/dashboard');
+  }
+
+  void navigateDomainLink() {
+    Navigator.of(context).pushReplacementNamed('/domainLinkActivity');
+  }
+
+
+  /* Timer */
+  startTimer() async {
+    var duration =   const Duration(seconds: 2);
+    try {
+      String accessToken = "1";
+      String sessionToken = await AppPreferences.getSessionToken();
+      String companyId = await AppPreferences.getCompanyId();
+      String domainLink = await AppPreferences.getDomainLink();
+      String domainLinkV = await AppPreferences.getDomainLinkVisibility();
+      print(domainLinkV);
+      print(companyId);
+      print("Session Token: $sessionToken");
+
+      if (sessionToken != "") {
+        return Timer(duration, navigateDashboard);
+      } else {
+        if (domainLinkV == "1" ) {
+          return Timer(duration, navigateDomainLink);
+        }
+        else {
+          return Timer(duration,navigateLogin);
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return Timer(duration, navigateDomainLink);
+  }
+
 }
+
