@@ -72,6 +72,8 @@ class _HomePageState extends State<HomePage> {
     var cid=await AppPreferences.getCompanyId();
     String lang = await AppPreferences.getLang();
 
+    print("Language :$lang");
+
     setState(() {
       vname=name;
       companyname=cname;
@@ -1161,7 +1163,6 @@ class _HomePageState extends State<HomePage> {
   getDashboardData() async {
     String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
-
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
