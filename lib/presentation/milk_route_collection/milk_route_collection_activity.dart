@@ -69,6 +69,7 @@ class _MilkRouteCollectionActivityState extends State<MilkRouteCollectionActivit
   String TotalAmount="0.00";
   String   TotalInvoice="0";
 
+  var uid="";
   void _updateOffset(Offset newOffset) {
     setState(() {
       // Clamp the Offset values to stay within the defined constraints
@@ -92,6 +93,11 @@ class _MilkRouteCollectionActivityState extends State<MilkRouteCollectionActivit
   }
 
   getData()async{
+
+   var user=await AppPreferences.getUId();
+   setState(() {
+     uid=user;
+   });
     await checkAfterFive();
     await getMilkCollection(page);
   }
@@ -404,7 +410,7 @@ class _MilkRouteCollectionActivityState extends State<MilkRouteCollectionActivit
   /* Widget to get Franchisee Name Layout */
   Widget getRoutesLayout(double parentHeight, double parentWidth) {
     return CommonDropdown(
-      apiUrl:ApiConstants().route + "?Route_Type=${widget.route_type}&",
+      apiUrl:ApiConstants().route + "?Route_Type=${widget.route_type}&User=$uid&",
       titleIndicator: false,
       ledgerName: selectedRouteName,
       readOnly: true,

@@ -548,13 +548,38 @@ class _HomePageState extends State<HomePage> {
                    // selectedMenu==ApplicationLocalizations.of(context).translate('center_milk')?
                    Row(
                      children: [
-                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_milk_collection")}")),
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_milk_collection")}",
+                           (){
+                           Navigator.push(context,
+                               MaterialPageRoute(builder: (context) =>
+                                   MilkCollectionActivity(
+                                     come:"",
+                                     from_date: from_date,
+                                     to_date: to_date,
+                                     route_type: "C",
+                                     setVal: "",
+                                     title: ApplicationLocalizations.of(
+                                         context).translate(
+                                         "center_milk_collection"),)));}
+
+                       )),
                        SizedBox(width: 10),
 
-                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_route_collection")}")),
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_route_collection")}",
+                               (){
+                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
+                                       from_date: from_date,
+                                       to_date: to_date,
+                                       route_type: "C",
+                                       title: ApplicationLocalizations.of(
+                                           context).translate(
+                                           "center_route_collection"),)));}
+                       )),
                        SizedBox(width: 10),
 
-                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_milk_collection")} ${ApplicationLocalizations.of(context).translate("report")}")),
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_milk_collection")} ${ApplicationLocalizations.of(context).translate("report")}",
+                           (){}
+                       )),
                      ],
                    ),
 
@@ -581,15 +606,37 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         children: [
 
-                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}")),
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}",
+                                  (){
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) =>
+                                        MilkCollectionActivity(
+                                          come:"",
+                                          from_date: from_date,
+                                          to_date: to_date,
+                                          route_type: "F",
+                                          setVal: "",
+                                          title: ApplicationLocalizations.of(
+                                              context).translate(
+                                              "farmer_milk_collection"),)));}
+                          )),
 
                           SizedBox(width: 10),
 
-                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}")),
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}",
+                                  (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
+                                  from_date: from_date,
+                                  to_date: to_date,
+                                  route_type: "F",
+                                  title: ApplicationLocalizations.of(
+                                      context).translate(
+                                      "farmer_route_collection"),)));}
+                          )),
 
                           SizedBox(width: 10),
 
-                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")} ${ApplicationLocalizations.of(context).translate("report")}")),
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")} ${ApplicationLocalizations.of(context).translate("report")}",(){})),
                         ],
                       )
 
@@ -608,9 +655,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildItem(String key) {
+  Widget _buildItem(String key,  nav) {
     return GestureDetector(
-      onTap: () {},
+      onTap:nav,
       child: Container(
         height: 80,
         padding: EdgeInsets.all(5),
