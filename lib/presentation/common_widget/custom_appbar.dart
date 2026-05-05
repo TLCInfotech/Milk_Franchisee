@@ -12,14 +12,18 @@ import 'dart:io';
 
 import '../../core/size_config.dart';
 import '../../dialog/log_out_dialog.dart';
+import '../menuActivity.dart';
 
 class CustomeAppBar extends StatefulWidget {
   const CustomeAppBar({
     super.key,
     required this.title,
     this.dashbord,
-    required this.onPress
+    required this.onPress, this.from_Date, this.to_Date
+
   });
+  final from_Date;
+  final to_Date;
   final dashbord;
 final Function? onPress;
   final String title;
@@ -66,30 +70,42 @@ if (data != null && data.toString().trim().isNotEmpty) {
   Widget build(BuildContext context) {
     return SafeArea(
       child: AppBar(
-        leadingWidth: widget.dashbord==true?0: 20,
-        leading: widget.dashbord==true?Container():IconButton(onPressed: (){
 
-          Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back),color:Colors.white,),
+        leadingWidth: widget.dashbord==true?20: 20,
+        leading: widget.dashbord == true
+            ? IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white),
+          onPressed: () {
+            widget.onPress?.call();
+          },
+        )
+            : IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+        ),
         automaticallyImplyLeading: false,
         title:  Container(
           width: SizeConfig.screenWidth,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-             logo==null?Container(): Container(
-                height:SizeConfig.screenHeight*.04,
-                width:SizeConfig.screenHeight*.04,
-                margin: EdgeInsets.all(10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    image: DecorationImage(
-                      image: FileImage(logo!),
-                      fit: BoxFit.cover,
-                    )
+
+             logo==null?Container(): Padding(
+               padding: const EdgeInsets.only(left: 8.0),
+               child: Container(
+                  height:SizeConfig.screenHeight*.035,
+                  width:SizeConfig.screenHeight*.035,
+                  margin: EdgeInsets.all(10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      image: DecorationImage(
+                        image: FileImage(logo!),
+                        fit: BoxFit.cover,
+                      )
+                  ),
                 ),
-              ),
+             ),
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(left: 20.0),

@@ -239,4 +239,6 @@ class ApiConstants {
   String language="Lang";
   String languageData="LanguageData";
   String getUserLogin="GetUserLogin";
+  String updatePassword="UpdatePassword";
+
 }

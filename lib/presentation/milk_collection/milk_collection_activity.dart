@@ -34,6 +34,7 @@ import '../common_widget/custom_appbar.dart';
 import 'add_or_edit_milk_collection.dart';
 
 class MilkCollectionActivity extends StatefulWidget {
+  final come;
   final route_type;
   final String title;
   final String setVal;
@@ -41,7 +42,7 @@ class MilkCollectionActivity extends StatefulWidget {
   final to_date;
   const MilkCollectionActivity( {super.key, this.route_type, required this.title, required this.setVal,
     required  this.from_date,
-    required this.to_date,
+    required this.to_date, this.come,
   });
 
   @override
@@ -130,7 +131,16 @@ final ScrollController _scrollController = ScrollController();
   }
 
   getData() async{
-    await    checkAfterFive();
+    if(widget.come=="dashboard"){
+      setState(() {
+        selectedSession="";
+        selectedSessionCode="";
+      });
+    }
+    else{
+      await    checkAfterFive();
+
+    }
     await _getMilkCollection(1);
   }
   checkAfterFive() async {

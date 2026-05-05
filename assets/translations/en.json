@@ -128,6 +128,7 @@
   "kg": "Kg",
   "ltr": "Ltr",
   "milk_sale": "Tanker Sale",
+  "center_collection": "Center Collection",
   "farmer_milk_collection": "Farmer Milk Collection",
   "center_milk_collection": "Center Milk Collection",
   "farmer_route_collection": "Farmer Route Collection",
@@ -983,7 +984,9 @@
   "worked_hr": "Worked Hours",
   "add_edit_expense": "Add/Edit Expense",
   "description": "Description",
-  "route_collection": "Route Collection"
+  "route_collection": "Route Collection",
+  "password_update_successfully": "Password Updated Successfully",
+  "add_both_password_same": "Please add  both password same"
 }
 
 

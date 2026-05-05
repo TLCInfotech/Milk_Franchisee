@@ -22,6 +22,7 @@ import '../../data/commonRequest/get_toakn_request.dart';
 import '../../data/constant.dart';
 import '../../data/request_helper.dart';
 import 'common_widget/custom_appbar.dart';
+import 'menuActivity.dart';
 import 'menu_block_design.dart';
 import 'milk_collection/milk_collection_activity.dart';
 import 'milk_route_collection/milk_route_collection_activity.dart';
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage> {
       vname=name;
       companyname=cname;
       selectedlang=lang;
+      companyID=cid;
 
     });
 
@@ -87,6 +89,8 @@ class _HomePageState extends State<HomePage> {
 
   }
   List<dynamic> langItems = [];
+
+  var selectedMenu="Center Milk";
 
   getUserPermission() async {
     String sessionToken = await AppPreferences.getSessionToken();
@@ -169,39 +173,32 @@ class _HomePageState extends State<HomePage> {
 
   }
 
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
         extendBody: true,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            setState(() {
-              menuOpen = true;
-            });
-            if (menuOpen) {
-              _showModalBottomSheet(context);
-              setState(() {
-                menuOpen = menuOpen;
-              });
-            }
-            await getUserPermission();
-          },
-          backgroundColor: CommonColor.THEME_COLOR,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-          ),
-          child: const Icon(
-            Icons.menu,
-            color: CommonColor.WHITE_COLOR,
+        drawer: MenuActivity(fromD: from_date, toD: to_date),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: CustomeAppBar(
+            title: companyname ?? ApplicationLocalizations.of(context)!.translate("home")!,
+            dashbord: true,
+            from_Date: from_date,
+            to_Date: to_date,
+
+            // 👇 THIS IS IMPORTANT
+            onPress: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
           ),
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        // appBar:  CustomTopBar(title:   ApplicationLocalizations.of(context)!.translate("home")!),
-        appBar:  PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: CustomeAppBar(title:companyname!=null?companyname:ApplicationLocalizations.of(context)!.translate("home")!,dashbord: true, onPress: null,),
-        ),
+        // PreferredSize(
+        //   preferredSize: AppBar().preferredSize,
+        //   child: CustomeAppBar(title:companyname!=null?companyname:ApplicationLocalizations.of(context)!.translate("home")!,dashbord: true, onPress: null,from_Date: from_date,to_Date: to_date,),
+        // ),
+
         body:Stack(
           alignment: Alignment.center,
           children: [
@@ -298,115 +295,121 @@ class _HomePageState extends State<HomePage> {
                           // )
                         ],
                       ),
-                      SizedBox(height: 10,),
-
-                      Stack(
-                        children: [
-                          Container(
-                            height: 35,
-
-                            decoration: BoxDecoration(
-                              borderRadius:  BorderRadius.all(Radius.circular(15)),
-                              gradient: LinearGradient(
-                                colors: [      Color(0xFF006400),
-                                  Color(0xFF008000),],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left:50,
-                            right: 50,
-                            top: 5,
-                            bottom: 5,
-                            child:  Text("${ApplicationLocalizations.of(context).translate("milk_collection")}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(color: Colors.white),),
-                          )
-                        ],
-                      ),
+                      SizedBox(height: 15,),
 
 
-                      SizedBox(height: 10,),
+                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("center_milk_collection")}"))||
+                          (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("center_milk")}"))
 
+                          ?  GestureDetector(
+                            onTap: (){
 
-                      Row(
-                        children: [
+                              if (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("center_milk_collection")}")){
 
-                          (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("center_milk_collection")}"))
-                              ?  Expanded(
-                            child: GestureDetector(
-                              onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkCollectionActivity(
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
                                   from_date:from_date,
                                   to_date:to_date,
                                   route_type:"C",
-                                  setVal: "",
-                                  title: ApplicationLocalizations.of(context).translate("center_milk_collection"),)));
+                                  // setVal: "",
+                                  title: ApplicationLocalizations.of(context).translate("center_route_collection"),)));
+
+                                }
+                              else {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) =>
+                                        MilkCollectionActivity(
+                                          come:"dashboard",
+                                          from_date: from_date,
+                                          to_date: to_date,
+                                          route_type: "C",
+                                          setVal: "",
+                                          title: ApplicationLocalizations.of(
+                                              context).translate(
+                                              "center_milk_collection"),)));
+                              }
                               },
-                              child: Container(
-                                width: (SizeConfig.screenWidth*0.9)/2,
+                            child: Container(
+                              width: (SizeConfig.screenWidth*0.95),
 
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                    border: Border.all(color: Colors.blue)
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      // width: (SizeConfig.screenWidth*0.9)/2,
-                                        height: 40,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: Colors.blue,
-                                            borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                            border: Border.all(color: Colors.blue)
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Icon(
-                                                FontAwesomeIcons.droplet,
-                                                size: 20,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            Text("${ApplicationLocalizations.of(context).translate("center_milk")}",style:fordashboard.copyWith(color:Colors.white)),
-                                          ],
-                                        )
-                                    ),
-
-                                    Container(
-                                      // width: (SizeConfig.screenWidth*0.9)/2,
-                                      margin: EdgeInsets.only(top: 10),
-
-                                      child: Column(
-                                        children: [
-
-                                          dashboardData==null ?Text("0.00",style: fordashboard,):
-                                          center_milkQuantity==null?Container():Text( "${ApplicationLocalizations.of(context).translate("qty")} :"
-                                              " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(center_milkQuantity!.replaceAll(",", "")))}",textAlign: TextAlign.center,style: fordashboard,),
-                                          Padding(
-                                            padding:  EdgeInsets.all(5.0),
-                                            child: Divider(height: 1,color: Colors.grey,),
-                                          ),
-                                          dashboardData==null ?Text("0.00",style: fordashboard,):
-                                          center_amount==null?Container():Text("${ApplicationLocalizations.of(context).translate("amt")} :"
-                                              " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(center_amount!.replaceAll(",", "")))}",textAlign: TextAlign.center,style: fordashboard,),
-                                          SizedBox(height: 2,),
-
-                                        ],
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                  border: Border.all(color: Colors.blue)
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    // width: (SizeConfig.screenWidth*0.9)/2,
+                                      height: 40,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                          border: Border.all(color: Colors.blue)
                                       ),
-                                    )
-                                  ],
-                                ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              FontAwesomeIcons.droplet,
+                                              size: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text("${ApplicationLocalizations.of(context).translate("center_milk_collection")}",style:item_heading_textStyle.copyWith(color:Colors.white,fontWeight: FontWeight.bold)),
+                                        ],
+                                      )
+                                  ),
+
+                                  Container(
+                                    // width: (SizeConfig.screenWidth*0.9)/2,
+                                    margin: EdgeInsets.only(top: 10),
+
+                                    child: Column(
+                                      children: [
+
+                                        dashboardData==null ?Text("0.00",style: fordashboard,):
+                                        center_milkQuantity==null?Container()
+                                            :Text( "${ApplicationLocalizations.of(context).translate("qty")} :"
+                                            " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(center_milkQuantity!.replaceAll(",", "")))}",textAlign: TextAlign.center,style: fordashboard,),
+                                        Padding(
+                                          padding:  EdgeInsets.all(5.0),
+                                          child: Divider(height: 1,color: Colors.grey,),
+                                        ),
+                                        dashboardData==null ?Text("0.00",style: fordashboard,):
+                                        center_amount==null?Container()
+                                            :Text("${ApplicationLocalizations.of(context).translate("amt")} :"
+                                            " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(center_amount!.replaceAll(",", "")))}",textAlign: TextAlign.center,style: fordashboard,),
+                                        SizedBox(height: 2,),
+
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ):Container(),
-                          (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}")) ?SizedBox(width: 10,):Container(),
-                          (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}"))
-                              ?Expanded(
-                            child: GestureDetector(
-                              onTap: (){
+                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}")) ?SizedBox(width: 10,):Container(),
+
+                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}"))
+                          ?
+                      GestureDetector(
+                            onTap: (){
+
+                              if (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}")){
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
+                                  from_date:from_date,
+                                  to_date:to_date,
+                                  route_type: "F",
+                                  // setVal: "",
+                                  title: ApplicationLocalizations.of(context).translate("farmer_route_collection"),
+                                )));
+
+                              }
+                              else {
+
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkCollectionActivity(
                                   from_date:from_date,
                                   to_date:to_date,
@@ -414,270 +417,217 @@ class _HomePageState extends State<HomePage> {
                                   setVal: "",
                                   title: ApplicationLocalizations.of(context).translate("farmer_milk_collection"),
                                 )));
-                              },
-                              child: Container(
-                                width: (SizeConfig.screenWidth*0.9)/2,
+                              }
+                            },
+                            child: Container(
+                              width: (SizeConfig.screenWidth*0.95),
 
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                    border: Border.all(color: Colors.green)
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      // width: (SizeConfig.screenWidth*0.9)/2,
-                                        height: 40,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                            border: Border.all(color: Colors.green)
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Icon(
-                                                FontAwesomeIcons.droplet,
-                                                size: 20,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            Text("${ApplicationLocalizations.of(context).translate("farmer_milk")}",style:fordashboard.copyWith(color:Colors.white)),
-                                          ],
-                                        )
-                                    ),
-
-                                    Container(
-                                      // width: (SizeConfig.screenWidth*0.9)/2,
-                                      margin: EdgeInsets.only(top: 10),
-                                      child: Column(
-                                        children: [
-
-                                          dashboardData==null ?Text("0.00",style: fordashboard,):
-                                          farmer_milkQuantity==null?Container():Text( "${ApplicationLocalizations.of(context).translate("qty")} :"
-                                              " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(farmer_milkQuantity!.replaceAll(",", "")))}",textAlign: TextAlign.center
-                                            ,style: fordashboard,),
-                                          Padding(
-                                            padding:  EdgeInsets.all(5.0),
-                                            child: Divider(height: 1,color: Colors.grey,),
-                                          ),
-                                          dashboardData==null ?Text("0.00",style: fordashboard,):
-                                          farmer_amount==null?Container():Text("${ApplicationLocalizations.of(context).translate("amt")} :"
-                                              " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(farmer_amount!.replaceAll(",", "")))}",style: fordashboard,textAlign: TextAlign.center,),
-                                          SizedBox(height: 2,),
-                                        ],
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                  border: Border.all(color: Colors.green)
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    // width: (SizeConfig.screenWidth*0.9)/2,
+                                      height: 40,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                          border: Border.all(color: Colors.green)
                                       ),
-                                    )
-                                  ],
-                                ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              FontAwesomeIcons.droplet,
+                                              size: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}",style:item_heading_textStyle.copyWith(color:Colors.white,fontWeight: FontWeight.bold)),
+                                        ],
+                                      )
+                                  ),
+
+                                  Container(
+                                    // width: (SizeConfig.screenWidth*0.9)/2,
+                                    margin: EdgeInsets.only(top: 10),
+                                    child: Column(
+                                      children: [
+
+                                        dashboardData==null ?Text("0.00",style: fordashboard,):
+                                        farmer_milkQuantity==null?Container():Text( "${ApplicationLocalizations.of(context).translate("qty")} :"
+                                            " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(farmer_milkQuantity!.replaceAll(",", "")))}",textAlign: TextAlign.center
+                                          ,style: fordashboard,),
+                                        Padding(
+                                          padding:  EdgeInsets.all(5.0),
+                                          child: Divider(height: 1,color: Colors.grey,),
+                                        ),
+                                        dashboardData==null ?Text("0.00",style: fordashboard,):
+                                        farmer_amount==null?Container():Text("${ApplicationLocalizations.of(context).translate("amt")} :"
+                                            " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(farmer_amount!.replaceAll(",", "")))}",style: fordashboard,textAlign: TextAlign.center,),
+                                        SizedBox(height: 2,),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                          ):Container()
-                        ],
-                      ),
-                  SizedBox(height: 10,),
+                          )
+                          :Container(),
 
-                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}"))||
-                          (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("center_route_collection")}"))
-                          ?Stack(
-                    children: [
+                      SizedBox(height: 15,),
+
+
+                      // Row(
+                      //   children: [
+                      //     GestureDetector(
+                      //       onTap: (){
+                      //         setState(() {
+                      //           selectedMenu=ApplicationLocalizations.of(context).translate("center_milk");
+                      //         });
+                      //       },
+                      //       child: Container(
+                      //         height: 40,
+                      //         width: (SizeConfig.screenWidth*0.9)/2,
+                      //         decoration: BoxDecoration(
+                      //           color:selectedMenu==ApplicationLocalizations.of(context).translate("center_milk")? Colors.indigo:Colors.white,
+                      //           borderRadius: BorderRadius.circular(10),
+                      //           border: Border.all(color: Colors.indigo)
+                      //         ),
+                      //         alignment: Alignment.center,
+                      //         child: Text("${ApplicationLocalizations.of(context).translate("center_milk")}",style: item_heading_textStyle.copyWith(fontWeight: FontWeight.bold,color: selectedMenu==ApplicationLocalizations.of(context).translate("center_milk")?Colors.white:Colors.black87),),
+                      //       ),
+                      //     ),
+                      //
+                      //     SizedBox(width: 10,),
+                      //
+                      //     GestureDetector(
+                      //       onTap: (){
+                      //         setState(() {
+                      //           selectedMenu=ApplicationLocalizations.of(context).translate("farmer_milk");
+                      //         });
+                      //       },
+                      //       child: Container(
+                      //         height: 40,
+                      //         width: (SizeConfig.screenWidth*0.9)/2,
+                      //         decoration: BoxDecoration(
+                      //             color:selectedMenu==ApplicationLocalizations.of(context).translate("farmer_milk")? Colors.indigo:Colors.white,
+                      //             borderRadius: BorderRadius.circular(10),
+                      //             border: Border.all(color: Colors.indigo)
+                      //         ),
+                      //         alignment: Alignment.center,
+                      //         child: Text("${ApplicationLocalizations.of(context).translate("farmer_milk")}",style: item_heading_textStyle.copyWith(fontWeight: FontWeight.bold,color: selectedMenu==ApplicationLocalizations.of(context).translate("farmer_milk")?Colors.white:Colors.black87),),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // SizedBox(height: 15,),
+
+
+                      Divider(
+                        height: 5,
+                        color: Colors.indigo,
+                      ),
+                      // SizedBox(height: 15,),
                       Container(
-                        height: 35,
-
+                        height: 40,
+                        width: (SizeConfig.screenWidth*0.9)/2,
                         decoration: BoxDecoration(
-                          borderRadius:  BorderRadius.all(Radius.circular(15)),
-                          gradient: LinearGradient(
-                            colors: [      Color(0xFF006400),
-                              Color(0xFF008000),],
-                          ),
+                          // color:selectedMenu==ApplicationLocalizations.of(context).translate("farmer_milk")? Colors.indigo:Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          //     border: Border.all(color: Colors.indigo)
                         ),
+                        alignment: Alignment.centerLeft,
+                        child: Text("${ApplicationLocalizations.of(context).translate("center_milk")}",style: item_heading_textStyle.copyWith(fontWeight: FontWeight.bold,color: selectedMenu==ApplicationLocalizations.of(context).translate("farmer_milk")?Colors.white:Colors.black87),),
                       ),
-                      Positioned(
-                        left:50,
-                        right: 50,
-                        top: 5,
-                        bottom: 5,
-                        child:  Text("${ApplicationLocalizations.of(context).translate("route_collection")}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(color: Colors.white),),
-                      )
-                    ],
-                  ):Container(),
+                   // selectedMenu==ApplicationLocalizations.of(context).translate('center_milk')?
+                   Row(
+                     children: [
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_milk_collection")}")),
+                       SizedBox(width: 10),
+
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_route_collection")}")),
+                       SizedBox(width: 10),
+
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_milk_collection")} ${ApplicationLocalizations.of(context).translate("report")}")),
+                     ],
+                   ),
+
+                      SizedBox(height: 15,),
 
 
-                  SizedBox(height: 10,),
-                  Row(
-                    children: [
-
-
-                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("center_route_collection")}"))?  Expanded(
-                        child: GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
-                              from_date:from_date,
-                              to_date:to_date,
-                              route_type:"C",
-                              // setVal: "",
-                              title: ApplicationLocalizations.of(context).translate("center_route_collection"),)));
-                          },
-                          child: Container(
-                            width: (SizeConfig.screenWidth*0.9)/2,
-
-                            decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                border: Border.all(color: Colors.blue)
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  // width: (SizeConfig.screenWidth*0.9)/2,
-                                    height: 60,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                        border: Border.all(color: Colors.blue)
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            FontAwesomeIcons.droplet,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-
-                                        Container(
-                                            width: (SizeConfig.screenWidth*0.7)/2,
-                                            padding: EdgeInsets.all(3),
-
-                                            child: Text("${ApplicationLocalizations.of(context).translate("center_route_collection")}",style:fordashboard.copyWith(color:Colors.white))),
-                                      ],
-                                    )
-                                ),
-
-                                Container(
-                                  // width: (SizeConfig.screenWidth*0.9)/2,
-                                  margin: EdgeInsets.only(top: 10),
-
-                                  child: Column(
-                                    children: [
-
-                                      dashboardData==null ?Text("0.00",style: fordashboard,):
-                                      center_milkQuantity==null?Container():Text( "${ApplicationLocalizations.of(context).translate("qty")} :"
-                                          " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(center_milkQuantity!.replaceAll(",", "")))}",textAlign: TextAlign.center,style: fordashboard,),
-                                      Padding(
-                                        padding:  EdgeInsets.all(5.0),
-                                        child: Divider(height: 1,color: Colors.grey,),
-                                      ),
-                                      dashboardData==null ?Text("0.00",style: fordashboard,):
-                                      center_amount==null?Container():Text("${ApplicationLocalizations.of(context).translate("amt")} :"
-                                          " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(center_amount!.replaceAll(",", "")))}",textAlign: TextAlign.center,style: fordashboard,),
-                                      SizedBox(height: 2,),
-
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                      Divider(
+                        height: 5,
+                        color: Colors.indigo,
+                      ),
+                      // SizedBox(height: 15,),
+                      Container(
+                        height: 40,
+                        width: (SizeConfig.screenWidth*0.9)/2,
+                        decoration: BoxDecoration(
+                            // color:selectedMenu==ApplicationLocalizations.of(context).translate("farmer_milk")? Colors.indigo:Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                       //     border: Border.all(color: Colors.indigo)
                         ),
+                        alignment: Alignment.centerLeft,
+                        child: Text("${ApplicationLocalizations.of(context).translate("farmer_milk")}",style: item_heading_textStyle.copyWith(fontWeight: FontWeight.bold,color: selectedMenu==ApplicationLocalizations.of(context).translate("farmer_milk")?Colors.white:Colors.black87),),
+                      ),
+
+                      Row(
+                        children: [
+
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}")),
+
+                          SizedBox(width: 10),
+
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}")),
+
+                          SizedBox(width: 10),
+
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")} ${ApplicationLocalizations.of(context).translate("report")}")),
+                        ],
                       )
-                      :Container(),
 
-                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}")) ?
 
-                      SizedBox(width: 10,)
-                      :Container(),
-
-                      (MasterMenu.contains("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}")) ?
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
-                              from_date:from_date,
-                              to_date:to_date,
-                              route_type: "F",
-                              // setVal: "",
-                              title: ApplicationLocalizations.of(context).translate("farmer_route_collection"),
-                            )));
-                          },
-                          child: Container(
-                            width: (SizeConfig.screenWidth*0.9)/2,
-
-                            decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                border: Border.all(color: Colors.green)
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  // width: (SizeConfig.screenWidth*0.9)/2,
-                                    height: 60,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                        border: Border.all(color: Colors.green)
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            FontAwesomeIcons.droplet,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Container(
-                                            width: (SizeConfig.screenWidth*0.7)/2,
-                                            padding: EdgeInsets.all(3),
-
-                                            child: Text("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}",overflow: TextOverflow.clip,style:fordashboard.copyWith(color:Colors.white))),
-                                      ],
-                                    )
-                                ),
-
-                                Container(
-                                  // width: (SizeConfig.screenWidth*0.9)/2,
-                                  margin: EdgeInsets.only(top: 10),
-                                  child: Column(
-                                    children: [
-
-                                      dashboardData==null ?Text("0.00",style: fordashboard,):
-                                      farmer_milkQuantity==null?Container():Text( "${ApplicationLocalizations.of(context).translate("qty")} :"
-                                          " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(farmer_milkQuantity!.replaceAll(",", "")))}",textAlign: TextAlign.center
-                                        ,style: fordashboard,),
-                                      Padding(
-                                        padding:  EdgeInsets.all(5.0),
-                                        child: Divider(height: 1,color: Colors.grey,),
-                                      ),
-                                      dashboardData==null ?Text("0.00",style: fordashboard,):
-                                      farmer_amount==null?Container():Text("${ApplicationLocalizations.of(context).translate("amt")} :"
-                                          " ${CommonWidget.getCurrencyFormatWithoutSymbol(double.parse(farmer_amount!.replaceAll(",", "")))}",style: fordashboard,textAlign: TextAlign.center,),
-                                      SizedBox(height: 2,),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ):Container()
-                        ])
                     ],
                   ),
+
                 ),
               ),
             ),
+
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         )
+
+    );
+  }
+
+  Widget _buildItem(String key) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        height: 80,
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: Colors.blue.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          ApplicationLocalizations.of(context).translate(key),
+          textAlign: TextAlign.center,
+          style: item_regular_textStyle.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+      ),
     );
   }
 
@@ -1223,76 +1173,6 @@ class _HomePageState extends State<HomePage> {
                     print(center_milkQuantity);
                     print(center_amount);
 
-                    if(dashboardData['Payment']==null){
-                      setState(() {
-                        payment=null;
-                      });
-                    }else {
-                      paymentVal(dashboardData['Payment'].toString());
-                    }
-                    if(dashboardData['Receipt']==null){
-                      setState(() {
-                        receipt=null;
-                      });
-                    }else {
-                      receiptVal(dashboardData['Receipt'].toString());
-                    }
-                    if(dashboardData['Bank_Amount']==null){
-                      setState(() {
-                        bank_amt=null;
-                      });
-                    }else {
-                      bankBalVal(dashboardData['Bank_Amount'].toString());
-                    }
-                    if(dashboardData['Cash_Amount']==null){
-                      setState(() {
-                        cash_amt=null;
-                      });
-                    }else {
-                      cashBalVal(dashboardData['Cash_Amount'].toString());
-                    }
-                    if(dashboardData['Sale']==null){
-                      setState(() {
-                        sale=null;
-                      });
-                    }else {
-                      saleVal(dashboardData['Sale'].toString());
-                    }
-                    if(dashboardData['Purchase']==null){
-                      setState(() {
-                        purchase=null;
-                      });
-                    }else {
-                      purchaseVal(dashboardData['Purchase'].toString());
-                    }
-                    if(dashboardData['Profit']==null){
-                      setState(() {
-                        profit=null;
-                      });
-                    }else {
-                      profitVal(dashboardData['Profit'].toString());
-                    }
-                    if(dashboardData['Outstanding']==null){
-                      setState(() {
-                        outStanding=null;
-                      });
-                    }else {
-                      outstandingVal(dashboardData['Outstanding'].toString());
-                    }
-                    if(dashboardData['Return_Amount']==null){
-                      setState(() {
-                        returnAmt=null;
-                      });
-                    }else {
-                      returnVal(dashboardData['Return_Amount'].toString());
-                    }
-                    if(dashboardData['Stock_Amount']==null){
-                      setState(() {
-                        stock=null;
-                      });
-                    }else {
-                      stockVal(dashboardData['Stock_Amount'].toString());
-                    }
                     print(data);
                   });
                 }
@@ -1434,6 +1314,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Map<String, String> _localizedStrings = {};
+
   getLangData(String lang) async {
     String companyId = await AppPreferences.getCompanyId();
     print("jfjnj 333 $companyId");
@@ -1535,6 +1416,7 @@ class _HomePageState extends State<HomePage> {
       CommonWidget.noInternetDialogNew(context);
     }
   }
+
   getUserData() async {
     print("Inside");
     String companyId = await AppPreferences.getCompanyId();
@@ -1584,6 +1466,7 @@ class _HomePageState extends State<HomePage> {
                   });
                 });
               });
+              getDashboardData();
               print("  LedgerLedger  $data ");
             }, onFailure: (error) {
               setState(() {
@@ -1622,6 +1505,7 @@ class _HomePageState extends State<HomePage> {
     print("_locale   $_locale");
     //MyApp.setLocale(context, _locale);
   }
+
   Future<void> _changeLanguage(BuildContext context, String languageCode) async {
     var newLocale =await setLocale(languageCode);
     //MyApp.setLocale(context, newLocale);
