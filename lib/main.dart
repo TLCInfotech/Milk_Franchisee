@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:milk_fr/presentation/dashboard_activity.dart';
 import 'package:milk_fr/presentation/login/domain_link.dart';
 import 'package:milk_fr/presentation/login/login_screen.dart';
-
 import 'core/app_preferance.dart';
 import 'core/colors.dart';
 import 'core/localss/api_data_fetch_localization.dart';
@@ -17,10 +15,8 @@ import 'core/size_config.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ApplicationLocalizations.loadFromLocal();
-
-//  cameras = await availableCameras();
+  //  cameras = await availableCameras();
   runApp(MyApp());
-
   // Rest of your code remains the same...
 }
 

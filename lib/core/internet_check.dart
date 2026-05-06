@@ -1,21 +1,21 @@
 import 'dart:async';
-// import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class InternetChecker {
   static late StreamSubscription<InternetConnectionStatus> mListener;
 
-  static  checkInternet() async {
-    mListener = InternetConnectionChecker().onStatusChange.listen((status) {
+  static Future<InternetConnectionStatus> checkInternet() async {
+    mListener = InternetConnectionCheckerPlus().onStatusChange.listen((status) {
       switch (status) {
         case InternetConnectionStatus.connected:
+          print("✅ Internet Connected");
           break;
         case InternetConnectionStatus.disconnected:
+          print("❌ Internet Disconnected");
           break;
       }
     });
 
-    return await InternetConnectionChecker().connectionStatus;
+    return await InternetConnectionCheckerPlus().connectionStatus;
   }
 }

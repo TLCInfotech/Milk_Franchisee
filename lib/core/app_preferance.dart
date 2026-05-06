@@ -11,19 +11,19 @@ class AppPreferences {
   /*set deviceId value in SharedPreferences*/
   static Future<String> getLang() async {
     SharedPreferences  prefs = await SharedPreferences.getInstance();
-    print("HI FD ${prefs.getString("en_In")}");
-    if(prefs.getString("en_IN")==null){
+    print("HI FD ${prefs.getString("English")}");
+    if(prefs.getString("English")==null){
       return "";
     }
     else
-      return prefs.getString("en_IN")??"";
+      return prefs.getString("English")??"";
   }
 
   /*get deviceId value form SharedPreferences*/
-  static setLang(String en_IN) async {
+  static setLang(String English) async {
     SharedPreferences   prefs = await SharedPreferences.getInstance();
-    print("$en_IN");
-    prefs.setString("en_IN", en_IN);
+    print("$English");
+    prefs.setString("English", English);
   }
 
 

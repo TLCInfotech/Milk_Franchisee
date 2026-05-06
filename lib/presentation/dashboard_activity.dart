@@ -1,11 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:milk_fr/core/string_en.dart';
 import 'package:milk_fr/presentation/sub_menu.dart';
@@ -39,7 +36,6 @@ class _HomePageState extends State<HomePage> {
   DateTime to_date = DateTime.now();
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isLoaderShow = false;
-
   var dashboardData=null;
   final controller = PageController();
   bool menuOpen = false;
@@ -66,25 +62,19 @@ class _HomePageState extends State<HomePage> {
     getData();
   }
   getData()async{
-
     var name= await AppPreferences.getUId();
     var cname=await AppPreferences.getCompanyName();
     var cid=await AppPreferences.getCompanyId();
     String lang = await AppPreferences.getLang();
-
     print("Language :$lang");
-
     setState(() {
       vname=name;
       companyname=cname;
       selectedlang=lang;
       companyID=cid;
-
     });
-
     await getUserPermission();
     await getLocalRights();
-
     await getMenuData(cid);
     await getDashboardData();
     await  getLangData(lang);
@@ -1276,10 +1266,8 @@ class _HomePageState extends State<HomePage> {
     String baseurl = await AppPreferences.getDomainLink();
     String vcode=await AppPreferences.getVendor();
     // String lang=await AppPreferences.getLang();
-
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
-
         setState(() {
           isLoaderShow = true;
         });
@@ -1289,19 +1277,15 @@ class _HomePageState extends State<HomePage> {
         apiRequestHelper.callAPIsForGetAPIDash(context,apiUrl, model.toJson(), "",
             onSuccess: (data) async {
               print("nvggvgbg  ${data[0]['Code']}");
-
               setState(() {
                 if (data != null) {
-
                   if(langItems.length==1){
                     langItems=data;
                     selectedlang=data[0];
                     AppPreferences.setLang(data[0]['Code'].toString());
-
                   }
                   setState(() {
                     langItems =data;
-
                     Future.delayed(Duration(seconds: 1), () {
                       setState(() {
                         isLoaderShow = false; // Stop loading after delay
@@ -1309,11 +1293,8 @@ class _HomePageState extends State<HomePage> {
                     });
                     print("LANGUAGE $data");
                   });
-
                   // langItems.add({"Code":"Default"});
-
                 }
-
                 setState(() {
                   Future.delayed(Duration(seconds: 1), () {
                     setState(() {

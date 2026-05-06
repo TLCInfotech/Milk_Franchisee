@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/localss/api_data_fetch_localization.dart';
-
-
 import '../../core/colors.dart';
-import '../../core/localss/application_localizations.dart';
 import '../../core/size_config.dart';
 
 class ErrorOccuredDialog extends StatefulWidget {

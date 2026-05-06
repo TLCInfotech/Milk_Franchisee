@@ -2,9 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../core/localss/api_data_fetch_localization.dart';
-
 import '../core/colors.dart';
-import '../core/common_style.dart';
 import '../core/size_config.dart';
 
 class ExitAppDialog extends StatefulWidget {
