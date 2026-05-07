@@ -247,7 +247,7 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                               Padding(
                                 padding: EdgeInsets.only(left: parentWidth * .005),
                                 child:  Text(
-                                  "${ApplicationLocalizations.of(context).translate('adds')}",
+                                  "Add",
                                   style: subHeading_withBold.copyWith(color: Colors.white ),
                                 ),
                               ),
