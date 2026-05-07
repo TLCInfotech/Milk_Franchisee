@@ -41,7 +41,7 @@ class _MenuActivityState extends State<MenuActivity> {
       mainMenu.add("${ApplicationLocalizations.of(context).translate("report")}");
       mainMenu.add("${ApplicationLocalizations.of(context).translate("master")}");
       mainMenu.add("${ApplicationLocalizations.of(context).translate("change_password")}");
-
+      selectedMainMenu="${ApplicationLocalizations.of(context).translate("transaction")}";
     });
 
   }
@@ -122,7 +122,7 @@ class _MenuActivityState extends State<MenuActivity> {
 
   List mainMenu = [];
 
-  var selectedMainMenu = "Transaction";
+  var selectedMainMenu = "";
 
   /// ---------------- DRAWER UI ----------------
   @override
@@ -165,9 +165,9 @@ class _MenuActivityState extends State<MenuActivity> {
                               )
                                   :CircleAvatar(
                                 radius: 20,
-                                backgroundImage: AssetImage(
-                                  'assets/images/${mainMenu[index]}.jpg',
-                                ),
+                                backgroundImage: index==0?
+                                AssetImage('assets/images/Transaction.jpg',)
+                                    :index==1?AssetImage('assets/images/Report.jpg',):AssetImage('assets/images/Master.jpg',),
                               ),
                               SizedBox(height: 8),
                               Text(mainMenu[index],

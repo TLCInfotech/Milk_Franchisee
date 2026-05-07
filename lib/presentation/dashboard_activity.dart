@@ -1299,7 +1299,7 @@ class _HomePageState extends State<HomePage> {
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
     String vcode=await AppPreferences.getVendor();
-    // String lang=await AppPreferences.getLang();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -1322,11 +1322,23 @@ class _HomePageState extends State<HomePage> {
                     });
                    }
                   else{
-                    setState(() {
-                      langItems=data;
-                      selectedlang="English";
+                    print("H1 $lang");
+                    if(lang!=" "||lang!=null){
+                      print("H1");
 
-                    });
+                      setState(() {
+                        langItems = data;
+                        selectedlang = "$lang";
+                      });
+                    }
+                    else {
+                      print("H2");
+
+                      setState(() {
+                        langItems = data;
+                        selectedlang = "English";
+                      });
+                    }
                    // await AppPreferences.setLang("English");
 
                   }
