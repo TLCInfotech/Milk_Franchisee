@@ -986,7 +986,9 @@
   "description": "Description",
   "route_collection": "Route Collection",
   "password_update_successfully": "Password Updated Successfully",
-  "add_both_password_same": "Please add  both password same"
+  "add_both_password_same": "Please add  both password same",
+  "farmer_collection": "Farmer Collection"
+
 }
 
 

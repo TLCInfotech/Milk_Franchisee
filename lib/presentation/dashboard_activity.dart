@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:milk_fr/core/string_en.dart';
@@ -23,6 +24,7 @@ import 'menuActivity.dart';
 import 'menu_block_design.dart';
 import 'milk_collection/milk_collection_activity.dart';
 import 'milk_route_collection/milk_route_collection_activity.dart';
+import 'millk_collection_reports/milk_collection_report.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -76,8 +78,9 @@ class _HomePageState extends State<HomePage> {
     await getUserPermission();
     await getLocalRights();
     await getMenuData(cid);
-    await getDashboardData();
     await  getLangData(lang);
+
+    await getDashboardData();
 
   }
   List<dynamic> langItems = [];
@@ -253,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                                   await  getLangData(value.toString());
                                   }*/
 
-                                    getMenuData(companyID); // refresh after selection
+                                    // getMenuData(companyID); // refresh after selection
                                     await getDashboardData();
                                   },
                                   itemBuilder: (context) =>
@@ -358,7 +361,7 @@ class _HomePageState extends State<HomePage> {
                                     // width: (SizeConfig.screenWidth*0.9)/2,
                                     margin: EdgeInsets.only(top: 10),
 
-                                    child: Column(
+                                    child: isLoaderShow?CircularProgressIndicator():Column(
                                       children: [
 
                                         dashboardData==null ?Text("0.00",style: fordashboard,):
@@ -540,7 +543,7 @@ class _HomePageState extends State<HomePage> {
                    // selectedMenu==ApplicationLocalizations.of(context).translate('center_milk')?
                    Row(
                      children: [
-                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_milk_collection")}",
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_collection")}",
                            (){
                            Navigator.push(context,
                                MaterialPageRoute(builder: (context) =>
@@ -557,7 +560,7 @@ class _HomePageState extends State<HomePage> {
                        )),
                        SizedBox(width: 10),
 
-                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_route_collection")}",
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("route_collection")}",
                                (){
                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
                                        from_date: from_date,
@@ -569,8 +572,18 @@ class _HomePageState extends State<HomePage> {
                        )),
                        SizedBox(width: 10),
 
-                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("center_milk_collection")} ${ApplicationLocalizations.of(context).translate("report")}",
-                           (){}
+                       Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("report")}",
+                           (){
+                             Navigator.push(context, MaterialPageRoute(builder: (context)=> MilkCollectionReportActivity(
+                               logoImage:"assets/images/tlc.jpg" ,
+                               title: ApplicationLocalizations.of(context).translate("milk_collection"),
+                               fromDate:from_date,
+                               toDate:to_date,
+                               partyCode: StringEn.collectionCenter,
+                               setText: StringEn.milk_collection, routType: 'C', reportType: 'frmMilkCollectionReport',
+                             )));
+
+                           }
                        )),
                      ],
                    ),
@@ -598,7 +611,7 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         children: [
 
-                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}",
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_collection")}",
                                   (){
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) =>
@@ -615,7 +628,7 @@ class _HomePageState extends State<HomePage> {
 
                           SizedBox(width: 10),
 
-                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_route_collection")}",
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("route_collection")}",
                                   (){
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>MilkRouteCollectionActivity(
                                   from_date: from_date,
@@ -628,7 +641,18 @@ class _HomePageState extends State<HomePage> {
 
                           SizedBox(width: 10),
 
-                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")} ${ApplicationLocalizations.of(context).translate("report")}",(){})),
+                          Expanded(child: _buildItem("${ApplicationLocalizations.of(context).translate("report")}",(){
+
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> MilkCollectionReportActivity(
+                              logoImage:"assets/images/tlc.jpg" ,
+                              title: "${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}",
+                              fromDate:from_date,
+                              toDate:to_date,
+                              setText: "${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}",routType: 'F', reportType: 'frmMilkCollectionReport',
+                              partyCode: StringEn.farmer,
+                            )));
+
+                          })),
                         ],
                       )
 
@@ -1149,6 +1173,7 @@ class _HomePageState extends State<HomePage> {
 
   }
 
+  var isdataloading=true;
 
   getDashboardData() async {
     String companyId = await AppPreferences.getCompanyId();
@@ -1161,6 +1186,7 @@ class _HomePageState extends State<HomePage> {
 
         setState(() {
           isLoaderShow = true;
+          isdataloading=true;
         });
         TokenRequestModel model =
         TokenRequestModel(token: sessionToken, page: 1.toString());
@@ -1216,6 +1242,7 @@ class _HomePageState extends State<HomePage> {
                 }
                 setState(() {
                   isLoaderShow = false;
+                  isdataloading=false;
                 });
               });
               print("  LedgerLedger  $data ");
@@ -1224,12 +1251,15 @@ class _HomePageState extends State<HomePage> {
 
               setState(() {
                 isLoaderShow = false;
+                isdataloading=false;
               });
               CommonWidget.errorDialog(context, error.toString());
             }, onException: (e) {
               print("Here2=> $e");
               setState(() {
                 isLoaderShow = false;
+                isdataloading=false;
+
               });
               var val = CommonWidget.errorDialog(context, e);
               print("YES");
@@ -1241,6 +1271,8 @@ class _HomePageState extends State<HomePage> {
 
               setState(() {
                 isLoaderShow = false;
+                isdataloading=false;
+
               });
               CommonWidget.gotoLoginScreen(context);
             });
@@ -1251,6 +1283,8 @@ class _HomePageState extends State<HomePage> {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
+          isdataloading=false;
+
         });
       }
       CommonWidget.noInternetDialogNew(context);
@@ -1280,19 +1314,22 @@ class _HomePageState extends State<HomePage> {
               setState(() {
                 if (data != null) {
                   if(langItems.length==1){
-                    langItems=data;
-                    selectedlang=data[0];
-                    AppPreferences.setLang(data[0]['Code'].toString());
-                  }
-                  setState(() {
-                    langItems =data;
-                    Future.delayed(Duration(seconds: 1), () {
-                      setState(() {
-                        isLoaderShow = false; // Stop loading after delay
-                      });
+                    setState(() {
+                      langItems=data;
+                      selectedlang=data[0];
+                      AppPreferences.setLang(data[0]['Code'].toString());
+
                     });
-                    print("LANGUAGE $data");
-                  });
+                   }
+                  else{
+                    setState(() {
+                      langItems=data;
+                      selectedlang="English";
+
+                    });
+                   // await AppPreferences.setLang("English");
+
+                  }
                   // langItems.add({"Code":"Default"});
                 }
                 setState(() {
@@ -1304,7 +1341,7 @@ class _HomePageState extends State<HomePage> {
                 });
               });
               print("OUT");
-              var l=await  AppPreferences.setLang(data[0]['Code'].toString());
+              var l=await  AppPreferences.setLang(selectedlang.toString());
               print("OUT Lang $l");
 
               await  getUserData();
@@ -1353,6 +1390,9 @@ class _HomePageState extends State<HomePage> {
     String vcode=await AppPreferences.getVendor();
     // print("jcjbdjbcjb  $lang");
     String lang=await AppPreferences.getLang();
+    print("Language in jnj: $lang"); if(lang==""||lang==null){
+      lang="English";
+    }
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {

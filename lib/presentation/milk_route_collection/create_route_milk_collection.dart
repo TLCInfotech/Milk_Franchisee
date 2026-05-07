@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+
 
 import '../../../../../../common_widget/common.dart';
 import '../../../../../../common_widget/get_date_layout.dart';

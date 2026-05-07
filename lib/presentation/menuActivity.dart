@@ -8,8 +8,10 @@ import '../core/app_preferance.dart';
 import '../core/colors.dart';
 import '../core/common_style.dart';
 import '../core/localss/api_data_fetch_localization.dart';
+import '../core/string_en.dart';
 import 'milk_collection/milk_collection_activity.dart';
 import 'milk_route_collection/milk_route_collection_activity.dart';
+import 'millk_collection_reports/milk_collection_report.dart';
 
 class MenuActivity extends StatefulWidget {
   final fromD;
@@ -283,7 +285,35 @@ class _MenuActivityState extends State<MenuActivity> {
     if (selectedMainMenu == "${ApplicationLocalizations.of(context).translate("report")}") {
       return ListView(
         children: [
-          buildSubMenu("${ApplicationLocalizations.of(context).translate("report")}", onTap: () {}),
+          buildSubMenu("${ApplicationLocalizations.of(context).translate("center_milk_collection")}", onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> MilkCollectionReportActivity(
+              logoImage:"assets/images/tlc.jpg" ,
+              title: ApplicationLocalizations.of(context).translate("center_milk_collection"),
+              fromDate:widget.fromD,
+              toDate:widget.toD,partyCode: StringEn.collectionCenter,
+              setText: "${ApplicationLocalizations.of(context).translate("center_milk_collection")}",
+              routType: 'C', reportType: 'frmMilkCollectionReport',
+            )));
+
+          }),
+          Divider(
+            color: CommonColor.THEME_COLOR,
+            thickness: 1,
+            indent: 20,
+            endIndent: 20,
+          ),
+          buildSubMenu("${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}", onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> MilkCollectionReportActivity(
+              logoImage:"assets/images/tlc.jpg" ,
+              title: ApplicationLocalizations.of(context).translate("farmer_milk_collection"),
+              fromDate:widget.fromD,
+              toDate:widget.toD,
+              setText: "${ApplicationLocalizations.of(context).translate("farmer_milk_collection")}",routType: 'F', reportType: 'frmMilkCollectionReport',
+              partyCode: StringEn.farmer,
+            )));
+
+
+          }),
           Divider(
             color: CommonColor.THEME_COLOR,
             thickness: 1,

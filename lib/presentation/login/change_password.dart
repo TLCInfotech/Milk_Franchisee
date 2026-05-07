@@ -12,6 +12,7 @@ import '../../core/localss/api_data_fetch_localization.dart';
 import '../../core/size_config.dart';
 import '../../data/constant.dart';
 import '../../data/request_helper.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 
 class ChangePasswordActivity extends StatefulWidget {
